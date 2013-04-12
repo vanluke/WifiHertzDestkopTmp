@@ -1,4 +1,5 @@
 package desktop.wifihertz;
+
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.swing.JOptionPane;
+
 
 /*
  * To change this template, choose Tools | Templates
@@ -25,7 +27,7 @@ public class MainJFrame extends javax.swing.JFrame
 
     public static Boolean isLogged = false;
     public static Boolean isInternetAccess = false;
-
+    public static Boolean isManaged = false;
     /**
      * Creates new form MainJFrame
      */
@@ -33,12 +35,6 @@ public class MainJFrame extends javax.swing.JFrame
     {
         isInternetAccess = SQLConnection.isInternetReachable();
         initComponents();
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        int xSize = (int)tk.getScreenSize().getWidth();
-        int ySize = (int)tk.getScreenSize().getHeight();
-        Dimension dimension = new Dimension(ySize, ySize);//.getScreenSize();
-        setPreferredSize(dimension);
-        jButton1.setVisible(false);
         jPanel1.setVisible(false);
     }
 
@@ -59,37 +55,51 @@ public class MainJFrame extends javax.swing.JFrame
         jPanel3 = new javax.swing.JPanel();
         jButtonLogin = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        try
+        {
+            logoJPanel1 = new desktop.wifihertz.LogoJPanel();
+        } catch (java.io.IOException e1)
+        {
+            e1.printStackTrace();
+        }
+        userLoginLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(139, 139, 139)
-                .addComponent(loginJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(156, Short.MAX_VALUE))
+            .addComponent(loginJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(86, 86, 86)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(68, Short.MAX_VALUE)
                 .addComponent(loginJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addGap(35, 35, 35))
         );
 
         jTabbedPane1.addTab("Hellow", jPanel1);
+
+        jPanel2.addHierarchyListener(new java.awt.event.HierarchyListener()
+        {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt)
+            {
+                jPanel2HierarchyChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGap(0, 522, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 216, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Manage", jPanel2);
@@ -98,11 +108,11 @@ public class MainJFrame extends javax.swing.JFrame
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 695, Short.MAX_VALUE)
+            .addGap(0, 522, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 216, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Do work", jPanel3);
@@ -125,31 +135,41 @@ public class MainJFrame extends javax.swing.JFrame
             }
         });
 
+        userLoginLabel.setFont(new java.awt.Font("Sylfaen", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jButton1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(logoJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(userLoginLabel)
+                .addGap(62, 62, 62)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonLogin)
                 .addGap(25, 25, 25))
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButtonLogin))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonLogin)
+                        .addComponent(jButton1)
+                        .addComponent(userLoginLabel))
+                    .addComponent(logoJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Hello");
         jTabbedPane1.getAccessibleContext().setAccessibleDescription("");
+
+        getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -175,16 +195,29 @@ public class MainJFrame extends javax.swing.JFrame
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
     {//GEN-HEADEREND:event_jButton1ActionPerformed
-        try
-        {                                             
-            // TODO add your handling code here:
-            JOptionPane.showMessageDialog(this, "You are logged out ", "Logout!", JOptionPane.INFORMATION_MESSAGE);
-            
-            isLogged = false;
-            loginJPanel1.manageTab(true);
+        if (isLogged == true)
+        {
+
+            //jPanel1.setEnabled(false);
             try
             {
-                loginJPanel1.refresh();
+                // TODO add your handling code here:
+                JOptionPane.showMessageDialog(this, "You are logged out ", "Logout!", JOptionPane.INFORMATION_MESSAGE);
+                userLoginLabel.setText(null);
+                isLogged = false;
+                loginJPanel1.manageTab(true);
+                try
+                {
+                    loginJPanel1.refresh();
+                }
+                catch (ClassNotFoundException ex)
+                {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                catch (SQLException ex)
+                {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             catch (ClassNotFoundException ex)
             {
@@ -195,19 +228,24 @@ public class MainJFrame extends javax.swing.JFrame
                 Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        catch (ClassNotFoundException ex)
+        else
         {
-            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "You must first login", "Error!", JOptionPane.ERROR_MESSAGE);
         }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jPanel2HierarchyChanged(java.awt.event.HierarchyEvent evt)//GEN-FIRST:event_jPanel2HierarchyChanged
+    {//GEN-HEADEREND:event_jPanel2HierarchyChanged
+        // TODO add your handling code here:
+         System.out.println("Winner" + jTabbedPane1.getSelectedIndex());
+         isManaged = true;
+    }//GEN-LAST:event_jPanel2HierarchyChanged
+    
     /**
      * @param args the command line arguments
      */
+    static MainJFrame frame;
     public static void main(String args[])
     {
         /* Set the Nimbus look and feel */
@@ -251,7 +289,18 @@ public class MainJFrame extends javax.swing.JFrame
             {
                 try
                 {
-                    new MainJFrame().setVisible(true);
+                    frame = new MainJFrame();//.setVisible(true);
+                    frame.setVisible(true);
+                   
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    //System.out.println("get acces " + frame.jTabbedPane1.getSelectedIndex());
+//                    Toolkit tk = Toolkit.getDefaultToolkit();
+//                    int xSize = ((int) tk.getScreenSize().getWidth());
+//                    int ySize = ((int) tk.getScreenSize().getHeight());
+//                    Dimension dm = new Dimension(xSize, ySize);
+//                    loginJPanel.jTable1.setPreferredSize(dm);
+
+
                 }
                 catch (MalformedURLException ex)
                 {
@@ -272,5 +321,7 @@ public class MainJFrame extends javax.swing.JFrame
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private desktop.wifihertz.loginJPanel loginJPanel1;
+    private desktop.wifihertz.LogoJPanel logoJPanel1;
+    public static javax.swing.JLabel userLoginLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,12 +5,16 @@
 package desktop.wifihertz;
 
 import static desktop.wifihertz.MainJFrame.jButton1;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,12 +34,15 @@ public class loginJPanel extends javax.swing.JPanel
 
     public loginJPanel()
     {
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        int xSize = (int)tk.getScreenSize().getWidth();
-        int ySize = (int)tk.getScreenSize().getHeight();
-        System.out.println("x: " + xSize + " y: " + ySize);
-        Dimension dimension = new Dimension(ySize, ySize);//.getScreenSize();
-        setPreferredSize(dimension);
+        //loginJPanel pane = new loginJPanel();
+        //jTable1.setGridColor(Color.yellow);
+       
+                
+       
+
+        //Dimension dimension = new Dimension(ySize, ySize);//.getScreenSize();
+        //setPreferredSize(dimension);
+        //jTable1.setLayout(new BoxLayo);
     }
 
     public void refresh() throws ClassNotFoundException, SQLException
@@ -80,10 +87,9 @@ public class loginJPanel extends javax.swing.JPanel
 
     public void manageTab(Boolean what) throws ClassNotFoundException, SQLException
     {
-       //initComponents();
+        //initComponents();
         this.setVisible(what);
     }
- 
 
     private void getDataFromDatabase() throws ClassNotFoundException, SQLException
     {
@@ -118,6 +124,7 @@ public class loginJPanel extends javax.swing.JPanel
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setMinimumSize(new java.awt.Dimension(1000, 500));
         jTable1.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
@@ -146,6 +153,8 @@ public class loginJPanel extends javax.swing.JPanel
         int col = jTable1.columnAtPoint(evt.getPoint());
         String getUserName = (String) jTable1.getModel().getValueAt(row, col);
         System.out.println("Wybrales usera " + getUserName);
+        String toDisp = getUserName + " is logged!";
+        MainJFrame.userLoginLabel.setText(toDisp);
         JOptionPane.showMessageDialog(this, "You are logged as " + getUserName, "Login!", JOptionPane.INFORMATION_MESSAGE);
         jTable1.getSelectedRow();
         try
@@ -164,6 +173,6 @@ public class loginJPanel extends javax.swing.JPanel
     }//GEN-LAST:event_jTable1MouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

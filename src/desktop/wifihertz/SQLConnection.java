@@ -25,10 +25,11 @@ import javax.sql.rowset.CachedRowSet;
  */
 public class SQLConnection
 {
+
     private static void insertToLocalDatabaseUsers(int user_id, String user_login) throws SQLException, ClassNotFoundException
     {
         Class.forName(SqLite);
-        String query = "insert into users (user_id, user_login) values( "+ user_id + ",'"+user_login+"')";
+        String query = "insert into users (user_id, user_login) values( " + user_id + ",'" + user_login + "')";
         int image_id = 0;
         Connection connection = DriverManager.getConnection(localUrlDatabase);
         Statement st = connection.createStatement();
@@ -37,11 +38,12 @@ public class SQLConnection
         connection.commit();
         connection.close();
     }
+
     private static ArrayList<Integer> connectToLocalDataBase() throws ClassNotFoundException, SQLException
     {
         ArrayList<Integer> list = new ArrayList<Integer>();
         Class.forName(SqLite);
-        String query ="SELECT * FROM users;"; 
+        String query = "SELECT * FROM users;";
         Connection connection1 = DriverManager.getConnection(localUrlDatabase);
         Statement statement1 = connection1.createStatement();
         ResultSet resultSet1 = statement1.executeQuery(query);
@@ -52,6 +54,7 @@ public class SQLConnection
         connection1.close();
         return list;
     }
+
     public static CachedRowSet getAllLocalUsers() throws ClassNotFoundException, SQLException
     {
         CachedRowSet crs = null;
@@ -65,12 +68,13 @@ public class SQLConnection
         connection1.close();
         return crs;
     }
+
     public static CachedRowSet getUsers(String login) throws ClassNotFoundException, SQLException
     {
         CachedRowSet crs = null;
         crs = new CachedRowSetImpl();
         Class.forName(SqLite);
-        String query = "SELECT * FROM users where lower(user_login)='"+login.toLowerCase()+"'";
+        String query = "SELECT * FROM users where lower(user_login)='" + login.toLowerCase() + "'";
         Connection connection1 = DriverManager.getConnection(localUrlDatabase);
         Statement statement1 = connection1.createStatement();
         crs.setCommand(query);
@@ -78,6 +82,7 @@ public class SQLConnection
         connection1.close();
         return crs;
     }
+
     public static boolean isInternetReachable() throws MalformedURLException, IOException
     {
         try
@@ -98,12 +103,15 @@ public class SQLConnection
         }
         return true;
     }
+
     public static void getRemoteDataBase(String user_login, String user_passwd) throws ClassNotFoundException, SQLException
     {
-        Class.forName (mySql);
+        Class.forName(mySql);
         Boolean ifICan = false;
-        String query = "SELECT * FROM users where lower(userLogin)='"+user_login.toLowerCase()+"' and lower(userPassword)=MD5('"+user_passwd.toLowerCase()+"')";
-        String getName = null; String getPasswd; int getUserId=-1;
+        String query = "SELECT * FROM users where lower(userLogin)='" + user_login.toLowerCase() + "' and lower(userPassword)=MD5('" + user_passwd.toLowerCase() + "')";
+        String getName = null;
+        String getPasswd;
+        int getUserId = -1;
         Connection connection = DriverManager.getConnection(urlDatabase);
         System.out.println("blad " + connection);
         Statement statement = connection.createStatement();
@@ -114,22 +122,25 @@ public class SQLConnection
             getName = resultSet.getString("userLogin");
             getUserId = Integer.parseInt(resultSet.getString("userId"));
             System.out.println("user_id:"
-                    + resultSet.getString("userId") + " user login : " + resultSet.getString("userLogin") +" user passwd : " + resultSet.getString("userPassword"));
+                    + resultSet.getString("userId") + " user login : " + resultSet.getString("userLogin") + " user passwd : " + resultSet.getString("userPassword"));
         }
         //sprawdzenie czy dany uzytkownik jest juz w bazie
-       Boolean ifUserExist = findUserInDataBase(getUserId);
-       if(!ifUserExist)
-       {
-           insertToLocalDatabaseUsers(getUserId, getName);
-       }
-       connection.close();
+        Boolean ifUserExist = findUserInDataBase(getUserId);
+        if (!ifUserExist)
+        {
+            insertToLocalDatabaseUsers(getUserId, getName);
+        }
+        connection.close();
     }
+
     public static void getRemoteDataBaseAllUsersToBeCopy() throws ClassNotFoundException, SQLException
     {
-        Class.forName (mySql);
+        Class.forName(mySql);
         Boolean ifICan = false;
         String query = "SELECT * FROM users;";
-        String getName = null; String getPasswd; int getUserId=-1;
+        String getName = null;
+        String getPasswd;
+        int getUserId = -1;
         Connection connection = DriverManager.getConnection(urlDatabase);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
@@ -138,21 +149,63 @@ public class SQLConnection
             getName = resultSet.getString("userLogin");
             getUserId = Integer.parseInt(resultSet.getString("userId"));
             System.out.println("user_id:"
-                    + resultSet.getString("userId") + " user login : " + resultSet.getString("userLogin") +" user passwd : " + resultSet.getString("userPassword"));
+                    + resultSet.getString("userId") + " user login : " + resultSet.getString("userLogin") + " user passwd : " + resultSet.getString("userPassword"));
         }
         //sprawdzenie czy dany uzytkownik jest juz w bazie
-       Boolean ifUserExist = findUserInDataBase(getUserId);
-       if(!ifUserExist)
-       {
-           insertToLocalDatabaseUsers(getUserId, getName);
-       }
-       connection.close();
+        Boolean ifUserExist = findUserInDataBase(getUserId);
+        if (!ifUserExist)
+        {
+            insertToLocalDatabaseUsers(getUserId, getName);
+        }
+        connection.close();
     }
+
+    public static ArrayList<WifiData> inicializeWifiData() throws ClassNotFoundException, SQLException
+    {
+        Class.forName(mySql);
+        Boolean ifICan = false;
+        ArrayList<WifiData> wifiData = new ArrayList<WifiData>();
+        String query = "SELECT * FROM wifidata;";
+//        int getImageId;int getDataId;
+//        long getDataTime;
+//        String getWifiName; String getWifiSsid; int getWifiRange;
+//        int getPositionX; int getPositionY;
+
+        Connection connection = DriverManager.getConnection(urlDatabase);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+       
+        while (resultSet.next())
+        {
+            wifiData.add(new WifiData(   Integer.parseInt(resultSet.getString("imageId")),
+                                         Integer.parseInt(resultSet.getString("dataId")),
+                                         resultSet.getString("wifiName"),
+                                         Long.parseLong(resultSet.getString("dataTime")),
+                                         resultSet.getString("wifiSsid"),
+                                         Integer.parseInt(resultSet.getString("wifiRange")),
+                                         Integer.parseInt(resultSet.getString("positionX")),
+                                         Integer.parseInt(resultSet.getString("positionY"))
+                                        ));
+//            getImageId   = Integer.parseInt(resultSet.getString("imageId"));
+//            getDataId    = Integer.parseInt(resultSet.getString("dataId"));
+//            getDataTime  = Long.parseLong(resultSet.getString("dataTime"));
+//            getWifiName  = resultSet.getString("wifiName");
+//            getWifiSsid  = resultSet.getString("wifiSsid");
+//            getWifiRange = Integer.parseInt(resultSet.getString("wifiRange"));
+//            getPositionX = Integer.parseInt(resultSet.getString("positionX"));
+//            getPositionY = Integer.parseInt(resultSet.getString("positionY"));
+           // System.out.println("Na serwerze : " + getImageId + " Ssid " + getWifiSsid + " dataTime : " + getDataTime);
+        }
+        connection.close();
+        return wifiData;
+        
+    }
+
     public static CachedRowSet getRemoteDataBaseAllUsers() throws ClassNotFoundException, SQLException
     {
         CachedRowSet crs = null;
         crs = new CachedRowSetImpl();
-        Class.forName (mySql);
+        Class.forName(mySql);
         Boolean ifICan = false;
         String query = "SELECT * FROM users;";
         Connection connection1 = DriverManager.getConnection(urlDatabase);
@@ -162,33 +215,35 @@ public class SQLConnection
         connection1.close();
         return crs;
     }
+
     private static Boolean findUserInDataBase(int getUserId) throws ClassNotFoundException, SQLException
     {
         ArrayList<Integer> liska = connectToLocalDataBase();
-        Boolean getOut=false;
-        for(Integer ip : liska)
+        Boolean getOut = false;
+        for (Integer ip : liska)
         {
-            if(ip == getUserId)
+            if (ip == getUserId)
             {
                 getOut = true;
             }
         }
         return getOut;
     }
+
     public static void setValue(Object obj, Class<?> cls, int rowIndex, int columnIndex) throws FileNotFoundException, IOException, SQLException
     {
         Connection connection = DriverManager.getConnection(SqLite);
         CachedRowSet crs = new CachedRowSetImpl();
-        crs.absolute(rowIndex+1); 
-        if(cls == Integer.class)
+        crs.absolute(rowIndex + 1);
+        if (cls == Integer.class)
         {
             crs.updateInt(columnIndex + 1, (Integer) obj);
         }
-        if(cls == Float.class)
+        if (cls == Float.class)
         {
             crs.updateFloat(columnIndex + 1, (Float) obj);
         }
-        if(cls == String.class)
+        if (cls == String.class)
         {
             crs.updateString(columnIndex + 1, (String) obj);
         }
@@ -197,8 +252,8 @@ public class SQLConnection
         crs.acceptChanges();
         connection.close();
     }
-    private static String SqLite            = "org.sqlite.JDBC";
-    private static String mySql             = "com.mysql.jdbc.Driver";
-    private static String localUrlDatabase  = "jdbc:sqlite:C:\\Users\\vanlu_000\\Documents\\NetBeansProjects\\WifiHertzDesktop\\database\\wifihertzdatabase.sqlite";
-    private static String urlDatabase       = "jdbc:mysql://mysql3.hekko.net.pl/kalny_wifi?user=kalny_wifi&password=xI2oUCmk";
+    private static String SqLite             = "org.sqlite.JDBC";
+    private static String mySql              = "com.mysql.jdbc.Driver";
+    private static String localUrlDatabase   = "jdbc:sqlite:C:\\Users\\vanlu_000\\Documents\\NetBeansProjects\\WifiHertzDesktop\\database\\wifihertzdatabase.sqlite";
+    private static String urlDatabase        = "jdbc:mysql://mysql3.hekko.net.pl/kalny_wifi?user=kalny_wifi&password=xI2oUCmk";
 }
