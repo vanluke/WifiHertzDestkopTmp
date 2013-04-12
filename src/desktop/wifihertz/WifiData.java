@@ -27,8 +27,8 @@ public class WifiData
     @Override
     public String toString()
     {
-        return "imageId : " + this.imageId + " dataId : " + this.dataId + " dataTime: " + this.dataTime
-                + " wifiName : " + this.wifiName + " wifiSsid : " + this.wifiSsid + " wifiRange: "
-                + this.wifiRange + " positionX : " + this.positionX + " positionY " + this.positionY;
+        return   "imageId : " + this.imageId  + " dataId " + this.dataId + " dataTime " + this.dataTime + " wifiName " +
+                 this.wifiName + " wifiSsid "  + this.wifiSsid + " wifiRange " + 
+                 this.wifiRange + " positionX " + this.positionX + " positionY " + this.positionY;
     }
 }

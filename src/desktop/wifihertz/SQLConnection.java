@@ -26,6 +26,21 @@ import javax.sql.rowset.CachedRowSet;
 public class SQLConnection
 {
 
+    private static void insertToLocalDataWifi(int imageId, int dataId, String wifiName, long dataTime, String wifiSsid, int wifiRange, int positionX, int positionY) throws SQLException, ClassNotFoundException
+    {
+        Class.forName(SqLite);
+         System.out.println("Ładuje do bazy");
+        String query = "insert into wifidata values(" + imageId + ", " + dataId + "," + dataTime + 
+                ",'" + wifiName +  "', '" + wifiSsid + "' , "+wifiRange +
+                "," + positionX + "," + positionY + ");";
+        int image_id = 0;
+        Connection connection = DriverManager.getConnection(localUrlDatabase);
+        Statement st = connection.createStatement();
+        st.executeUpdate(query);
+        connection.setAutoCommit(false);
+        connection.commit();
+        connection.close();
+    }
     private static void insertToLocalDatabaseUsers(int user_id, String user_login) throws SQLException, ClassNotFoundException
     {
         Class.forName(SqLite);
@@ -38,7 +53,6 @@ public class SQLConnection
         connection.commit();
         connection.close();
     }
-
     private static ArrayList<Integer> connectToLocalDataBase() throws ClassNotFoundException, SQLException
     {
         ArrayList<Integer> list = new ArrayList<Integer>();
@@ -159,25 +173,18 @@ public class SQLConnection
         }
         connection.close();
     }
-
-    public static ArrayList<WifiData> inicializeWifiData() throws ClassNotFoundException, SQLException
+    public static ArrayList<WifiData> getDataFromLocalDatabase() throws ClassNotFoundException, SQLException
     {
-        Class.forName(mySql);
-        Boolean ifICan = false;
         ArrayList<WifiData> wifiData = new ArrayList<WifiData>();
+        
+        Class.forName(SqLite);
         String query = "SELECT * FROM wifidata;";
-//        int getImageId;int getDataId;
-//        long getDataTime;
-//        String getWifiName; String getWifiSsid; int getWifiRange;
-//        int getPositionX; int getPositionY;
-
-        Connection connection = DriverManager.getConnection(urlDatabase);
+        Connection connection = DriverManager.getConnection(localUrlDatabase);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-       
         while (resultSet.next())
         {
-            wifiData.add(new WifiData(   Integer.parseInt(resultSet.getString("imageId")),
+             wifiData.add(new WifiData(  Integer.parseInt(resultSet.getString("imageId")),
                                          Integer.parseInt(resultSet.getString("dataId")),
                                          resultSet.getString("wifiName"),
                                          Long.parseLong(resultSet.getString("dataTime")),
@@ -186,6 +193,30 @@ public class SQLConnection
                                          Integer.parseInt(resultSet.getString("positionX")),
                                          Integer.parseInt(resultSet.getString("positionY"))
                                         ));
+        }
+        connection.close();
+        return wifiData;
+    }
+    public static void inicializeWifiData() throws ClassNotFoundException, SQLException
+    {
+        Class.forName(mySql);
+        Boolean ifICan = false;
+        
+        String query = "SELECT * FROM wifidata;";
+        Connection connection = DriverManager.getConnection(urlDatabase);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+       
+        while (resultSet.next())
+        {
+            insertToLocalDataWifi(Integer.parseInt(resultSet.getString("imageId")),
+                                         Integer.parseInt(resultSet.getString("dataId")),
+                                         resultSet.getString("wifiName"),
+                                         Long.parseLong(resultSet.getString("dataTime")),
+                                         resultSet.getString("wifiSsid"),
+                                         Integer.parseInt(resultSet.getString("wifiRange")),
+                                         Integer.parseInt(resultSet.getString("positionX")),
+                                         Integer.parseInt(resultSet.getString("positionY")));
 //            getImageId   = Integer.parseInt(resultSet.getString("imageId"));
 //            getDataId    = Integer.parseInt(resultSet.getString("dataId"));
 //            getDataTime  = Long.parseLong(resultSet.getString("dataTime"));
@@ -196,9 +227,8 @@ public class SQLConnection
 //            getPositionY = Integer.parseInt(resultSet.getString("positionY"));
            // System.out.println("Na serwerze : " + getImageId + " Ssid " + getWifiSsid + " dataTime : " + getDataTime);
         }
+        //insertToLocalDataWifi(wifiData);
         connection.close();
-        return wifiData;
-        
     }
 
     public static CachedRowSet getRemoteDataBaseAllUsers() throws ClassNotFoundException, SQLException

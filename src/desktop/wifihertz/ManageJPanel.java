@@ -5,6 +5,7 @@
 package desktop.wifihertz;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
@@ -30,6 +31,7 @@ public class ManageJPanel extends javax.swing.JPanel
     }
     public void getManageTab() throws ClassNotFoundException, SQLException
     {
+       // ArrayList<WifiData> list = new ArrayList<WifiData>(SQLConnection.inicializeWifiData());
         if (MainJFrame.isLogged == true && MainJFrame.isManaged == true)
         {
 //            if (MainJFrame.isInternetAccess == true)

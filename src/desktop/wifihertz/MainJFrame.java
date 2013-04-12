@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
@@ -240,6 +241,23 @@ public class MainJFrame extends javax.swing.JFrame
         // TODO add your handling code here:
          System.out.println("Winner" + jTabbedPane1.getSelectedIndex());
          isManaged = true;
+         /*ArrayList<WifiData> xx = null;
+        try
+        {
+            xx = new ArrayList<WifiData>(SQLConnection.getDataFromLocalDatabase());
+        }
+        catch (ClassNotFoundException ex)
+        {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         for(int i = 0; i < xx.size()-1; i++)
+         {
+             System.out.println(xx.toArray()[i]);
+         }*/
     }//GEN-LAST:event_jPanel2HierarchyChanged
     
     /**
